@@ -10,7 +10,7 @@ variable "environment" {
 
 variable "project" {
   type = string
-  default = "training"
+  default = "terraform-aws-lab"
 }
 
 variable "vpc_name" {
