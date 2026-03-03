@@ -1,11 +1,11 @@
 terraform {
-  backend "remote" {
-    hostname     = "app.terraform.io"
-    organization = "vvorth"
-    workspaces {
-      name = "my-aws-app"
-    }
-  }
+  # backend "remote" {
+  #   hostname     = "app.terraform.io"
+  #   organization = "vvorth"
+  #   workspaces {
+  #     name = "my-aws-app"
+  #   }
+  # }
   required_version = ">= 1.0.0"
   required_providers {
     aws = {
