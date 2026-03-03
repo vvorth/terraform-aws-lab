@@ -108,7 +108,7 @@ resource "aws_internet_gateway" "internet_gateway" {
   }
 }
 
-# #Create EIP for NAT Gateway
+#Create EIP for NAT Gateway
 # resource "aws_eip" "nat_gateway_eip" {
 #   #  domain     = "vpc"
 #   depends_on = [aws_internet_gateway.internet_gateway]
@@ -117,7 +117,7 @@ resource "aws_internet_gateway" "internet_gateway" {
 #   }
 # }
 
-# #Create NAT Gateway
+#Create NAT Gateway
 # resource "aws_nat_gateway" "nat_gateway" {
 #   depends_on    = [aws_subnet.public_subnets]
 #   allocation_id = aws_eip.nat_gateway_eip.id
@@ -290,25 +290,6 @@ resource "aws_instance" "web_server_2" {
 module "s3_bucket" {
   source = "app.terraform.io/vvorth/s3-bucket/aws"
   bucket = "vvorth-test-s3-bucket-2026-${var.environment}"
-}
-
-
-
-
-output "public_ip_server_subnet_1" {
-  value = "web_server public ip: ${aws_instance.web_server.public_ip}"
-}
-
-output "public_dns_server_subnet_1" {
-  value = "web_server public dns: ${aws_instance.web_server.public_dns}"
-}
-
-output "public_ip_server_2_subnet_2" {
-  value = "web_server_2 public ip: ${aws_instance.web_server_2.public_ip}"
-}
-
-output "public_dns_server_2_subnet_2" {
-  value = "web_server_2 public dns: ${aws_instance.web_server_2.public_dns}"
 }
 
 
