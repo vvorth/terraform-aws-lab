@@ -27,8 +27,6 @@ resource "aws_vpc" "vpc" {
 
   tags = {
     Name        = var.vpc_name
-    Environment = "demo_environment"
-    Terraform   = "true"
   }
 
   enable_dns_hostnames = true
@@ -57,7 +55,6 @@ resource "aws_subnet" "public_subnets" {
 
   tags = {
     Name      = each.key
-    Terraform = "true"
   }
 }
 
@@ -72,7 +69,6 @@ resource "aws_route_table" "public_route_table" {
   }
   tags = {
     Name      = "demo_public_rtb"
-    Terraform = "true"
   }
 }
 
@@ -86,7 +82,6 @@ resource "aws_route_table" "private_route_table" {
   }
   tags = {
     Name      = "demo_private_rtb"
-    Terraform = "true"
   }
 }
 
@@ -332,9 +327,20 @@ output "public_dns" {
 }
 
 output "public_ip_server_subnet_1" {
-  value = aws_instance.web_server.public_ip
+  value = "web_server public ip: ${aws_instance.web_server.public_ip}"
 }
 
 output "public_dns_server_subnet_1" {
-  value = aws_instance.web_server.public_dns
+  value = "web_server public dns: ${aws_instance.web_server.public_dns}"
 }
+
+output "public_ip_server_2_subnet_2" {
+  value = "web_server_2 public ip: ${aws_instance.web_server_2.public_ip}"
+}
+
+output "public_dns_server_2_subnet_2" {
+  value = "web_server_2 public dns: ${aws_instance.web_server_2.public_dns}"
+}
+
+
+
