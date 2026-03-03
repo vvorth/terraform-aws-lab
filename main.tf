@@ -318,6 +318,15 @@ resource "aws_instance" "web_server_2" {
   }
 }
 
+
+
+module "s3_bucket" {
+  source = "app.terraform.io/vvorth/s3-bucket/aws"
+  bucket = "vvorth-test-s3-bucket-2026"
+}
+
+
+
 output "public_ip" {
   value = aws_instance.ubuntu_server.public_ip
 }
