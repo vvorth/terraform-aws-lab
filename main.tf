@@ -11,8 +11,8 @@ provider "aws" {
   default_tags {
     tags = {
       Environment = var.environment
-      Project = var.project
-      Terraform = "true"
+      Project     = var.project
+      Terraform   = "true"
     }
   }
 }
@@ -26,7 +26,7 @@ resource "aws_vpc" "vpc" {
   cidr_block = var.vpc_cidr
 
   tags = {
-    Name        = var.vpc_name
+    Name = var.vpc_name
   }
 
   enable_dns_hostnames = true
@@ -54,7 +54,7 @@ resource "aws_subnet" "public_subnets" {
   map_public_ip_on_launch = true
 
   tags = {
-    Name      = each.key
+    Name = each.key
   }
 }
 
@@ -68,7 +68,7 @@ resource "aws_route_table" "public_route_table" {
     #nat_gateway_id = aws_nat_gateway.nat_gateway.id
   }
   tags = {
-    Name      = "demo_public_rtb"
+    Name = "demo_public_rtb"
   }
 }
 
@@ -81,7 +81,7 @@ resource "aws_route_table" "private_route_table" {
     nat_gateway_id = aws_nat_gateway.nat_gateway.id
   }
   tags = {
-    Name      = "demo_private_rtb"
+    Name = "demo_private_rtb"
   }
 }
 
@@ -110,7 +110,7 @@ resource "aws_internet_gateway" "internet_gateway" {
 
 #Create EIP for NAT Gateway
 resource "aws_eip" "nat_gateway_eip" {
-#  domain     = "vpc"
+  #  domain     = "vpc"
   depends_on = [aws_internet_gateway.internet_gateway]
   tags = {
     Name = "demo_igw_eip"
@@ -149,43 +149,6 @@ data "aws_ami" "ubuntu" {
   owners = ["099720109477"]
 }
 
-# Terraform Resource Block - To Build EC2 instance in Public Subnet
-resource "aws_instance" "ubuntu_server" {
-  ami                         = data.aws_ami.ubuntu.id
-  instance_type               = "t3.micro"
-  subnet_id                   = aws_subnet.public_subnets["public_subnet_1"].id
-  security_groups             = [aws_security_group.vpc-ping.id, aws_security_group.ingress-ssh.id, aws_security_group.vpc-web.id]
-  associate_public_ip_address = true
-  key_name                    = aws_key_pair.generated.key_name
-  connection {
-    user        = "ubuntu"
-    private_key = tls_private_key.generated.private_key_pem
-    host        = self.public_ip
-  }
-
-  # Leave the first part of the block unchanged and create our `local-exec` provisioner
-  # provisioner "local-exec" {
-  #   command = "chmod 600 ${local_file.private_key_pem.filename}"
-  # }
-
-  provisioner "remote-exec" {
-    inline = [
-      "sudo rm -rf /tmp",
-      "sudo git clone https://github.com/hashicorp/demo-terraform-101 /tmp",
-      "sudo sh /tmp/assets/setup-web.sh",
-    ]
-  }
-
-  tags = {
-    Name = "Ubuntu EC2 Server"
-  }
-
-  lifecycle {
-    ignore_changes = [security_groups]
-  }
-
-
-}
 
 # Terraform Resource Block - Security Group to Allow Ping Traffic
 resource "aws_security_group" "vpc-ping" {
@@ -273,10 +236,14 @@ resource "aws_security_group" "vpc-web" {
 
 # Terraform Resource Block - To Build Web Server in Public Subnet
 resource "aws_instance" "web_server" {
-  ami                         = data.aws_ami.ubuntu.id
-  instance_type               = "t3.micro"
-  subnet_id                   = aws_subnet.public_subnets["public_subnet_1"].id
-  security_groups             = [aws_security_group.vpc-ping.id, aws_security_group.ingress-ssh.id, aws_security_group.vpc-web.id]
+  ami           = data.aws_ami.ubuntu.id
+  instance_type = "t3.micro"
+  subnet_id     = aws_subnet.public_subnets["public_subnet_1"].id
+  security_groups = [
+    aws_security_group.vpc-ping.id,
+    aws_security_group.ingress-ssh.id,
+    aws_security_group.vpc-web.id
+  ]
   associate_public_ip_address = true
   key_name                    = aws_key_pair.generated.key_name
   connection {
